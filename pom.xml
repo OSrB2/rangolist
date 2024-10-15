@@ -28,6 +28,7 @@
 	</scm>
 	<properties>
 		<java.version>17</java.version>
+		<org.mapstruct.version>1.6.2</org.mapstruct.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -72,7 +73,11 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-
+		<dependency>
+			<groupId>org.mapstruct</groupId>
+			<artifactId>mapstruct</artifactId>
+			<version>${org.mapstruct.version}</version>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -86,7 +91,16 @@
 							<groupId>org.projectlombok</groupId>
 							<artifactId>lombok</artifactId>
 						</exclude>
+						<annotationProcessorPaths>
+							<path>
+								<groupId>org.mapstruct</groupId>
+								<artifactId>mapstruct-processor</artifactId>
+								<version>${org.mapstruct.version}</version>
+							</path>
+							<!-- other annotation processors -->
+						</annotationProcessorPaths>
 					</excludes>
+
 				</configuration>
 			</plugin>
 		</plugins>
