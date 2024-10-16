@@ -14,18 +14,18 @@ import java.util.Optional;
 @Service
 public class RestaurantService {
   @Autowired
-  private RestaurantRepository restaurantRepository;
+  RestaurantRepository restaurantRepository;
 
   @Autowired
-  private RestaurantMapper restaurantMapper;
+  RestaurantMapper restaurantMapper;
 
-  public Restaurant createRestaurant (Restaurant restaurant) {
-    return restaurantRepository.save(restaurant);
+  public RestaurantDTO createRestaurant (Restaurant restaurant) {
+     restaurantRepository.save(restaurant);
+     return restaurantMapper.toRestaurantDto(restaurant);
   }
 
   public List<RestaurantDTO> listAllRestaurant() {
     List<Restaurant> restaurants = restaurantRepository.findAll();
-
     List<RestaurantDTO> restaurantDTOS = new ArrayList<>();
 
     for (Restaurant restaurant : restaurants) {
@@ -52,8 +52,8 @@ public class RestaurantService {
 
   public Restaurant updateRestaurantById(Long id, Restaurant restaurant) {
     Optional<Restaurant> restaurantOptional = restaurantRepository.findById(id);
-
     Restaurant restaurantUpdate = restaurantOptional.get();
+
     if (restaurantUpdate.getName() != null) {
       restaurantUpdate.setName(restaurant.getName());
     }
@@ -70,9 +70,9 @@ public class RestaurantService {
       restaurantUpdate.setOpeningHours(restaurant.getOpeningHours());
     }
 
-    if (restaurantUpdate.getProducts() != null) {
-      restaurantUpdate.setProducts(restaurant.getProducts());
-    }
+//    if (restaurantUpdate.getProducts() != null) {
+//      restaurantUpdate.setProducts(restaurant.getProducts());
+//    }
 
     return restaurantRepository.save(restaurantUpdate);
   }

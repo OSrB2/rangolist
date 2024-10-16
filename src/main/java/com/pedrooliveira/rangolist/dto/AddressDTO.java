@@ -1,6 +1,5 @@
 package com.pedrooliveira.rangolist.dto;
 
-import com.pedrooliveira.rangolist.model.Address;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,9 +11,9 @@ import org.springframework.stereotype.Component;
 @NoArgsConstructor
 @Getter
 @Setter
-public class RestaurantDTO {
-  private String imagem;
-  private String nome;
-  private AddressDTO endereco;
-  private String funcionamento;
+public class AddressDTO {
+  private String rua;
+  private String cidade;
+  private String estado;
+  private String cep;
 }
