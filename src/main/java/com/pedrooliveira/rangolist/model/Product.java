@@ -37,6 +37,8 @@ public class Product {
   @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<Promotion> promotions;
 
+  private Boolean status = true;
+
   @PrePersist
   protected void onCreate() {
     createdAt = LocalDateTime.now();
