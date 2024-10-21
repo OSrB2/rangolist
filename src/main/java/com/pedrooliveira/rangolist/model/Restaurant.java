@@ -36,6 +36,8 @@ public class Restaurant {
   @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<Product> products;
 
+  private Boolean status = true;
+
   @PrePersist
   protected void onCreate() {
     createdAt = LocalDateTime.now();

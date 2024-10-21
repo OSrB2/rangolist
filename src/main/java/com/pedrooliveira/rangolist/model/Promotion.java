@@ -33,6 +33,8 @@ public class Promotion {
   @Column(name = "updated_at")
   private LocalDateTime updatedAt;
 
+  private Boolean status = true;
+
   @PrePersist
   protected void onCreate() {
     createdAt = LocalDateTime.now();
