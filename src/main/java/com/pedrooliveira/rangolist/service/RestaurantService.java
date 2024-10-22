@@ -70,14 +70,6 @@ public class RestaurantService {
       restaurantUpdate.setOpeningHours(restaurant.getOpeningHours());
     }
 
-    //TODO -> Modificar a lógica ou a forma como as tabelas são criadas ou relacionadas, para quando um restaurante
-    // for editado os produtos continuem relacionados a ele, no momento quando um restaurante é modificado,
-    // os produtos relacionados a ele desaparecem.
-
-//    if (restaurantUpdate.getProducts() != null) {
-//      restaurantUpdate.setProducts(restaurant.getProducts());
-//    }
-
     return restaurantRepository.save(restaurantUpdate);
   }
 
