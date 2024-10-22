@@ -35,9 +35,10 @@ public class RestaurantController {
     return restaurantService.findRestaurantById(id);
   }
 
-  @GetMapping(path = "/")
+  @GetMapping(path = "/find")
   public ResponseEntity<List<RestaurantDTO>> searchByName(@RequestParam String name) {
-    return (ResponseEntity<List<RestaurantDTO>>) restaurantService.findRestaurantByName(name);
+    List<RestaurantDTO> restaurants = restaurantService.findRestaurantByName(name);
+    return ResponseEntity.ok(restaurants);
   }
 
   @PutMapping(path = "/{id}")
