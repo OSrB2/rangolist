@@ -20,10 +20,6 @@ public class Product {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @ManyToOne
-  @JoinColumn(name = "restaurant_id")
-  private Restaurant restaurant;
-
   private String image;
   private String name;
   private Double price;
@@ -38,6 +34,10 @@ public class Product {
   private List<Promotion> promotions;
 
   private Boolean status = true;
+
+  @ManyToOne(fetch = FetchType.EAGER)
+  @JoinColumn(name = "restaurant_id")
+  private Restaurant restaurant;
 
   @PrePersist
   protected void onCreate() {
