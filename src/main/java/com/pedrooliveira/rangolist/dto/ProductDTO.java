@@ -1,6 +1,6 @@
 package com.pedrooliveira.rangolist.dto;
 
-import com.pedrooliveira.rangolist.model.Restaurant;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,10 +13,10 @@ import org.springframework.stereotype.Component;
 @Getter
 @Setter
 public class ProductDTO {
-  private Restaurant restaurante;
   private String imagem;
   private String nome;
   private Double preco;
   private String categoria;
+  private RestaurantDTO restaurante;
 }
 

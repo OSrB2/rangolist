@@ -3,6 +3,8 @@ package com.pedrooliveira.rangolist.service;
 import com.pedrooliveira.rangolist.dto.ProductDTO;
 import com.pedrooliveira.rangolist.mapper.ProductMapper;
 import com.pedrooliveira.rangolist.model.Product;
+import com.pedrooliveira.rangolist.model.Restaurant;
+import com.pedrooliveira.rangolist.repository.RestaurantRepository;
 import com.pedrooliveira.rangolist.repository.ProductRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,11 +21,19 @@ public class ProductService {
   ProductRepository productRepository;
 
   @Autowired
+  RestaurantRepository restaurantRepository;
+
+  @Autowired
   ProductMapper productMapper;
 
   public ProductDTO createProduct (Product product) {
+    if (product.getRestaurant() != null) {
+      Restaurant restaurant = restaurantRepository.findById(product.getRestaurant().getId())
+          .orElseThrow(() -> new RuntimeException("Restaurant not found"));
+      product.setRestaurant(restaurant);
+    }
     productRepository.save(product);
-    return  productMapper.toProductDTO(product);
+    return productMapper.toProductDTO(product);
   }
 
   public List<ProductDTO> listAllProducts() {
@@ -55,12 +65,12 @@ public class ProductService {
     Optional<Product> productOptional = productRepository.findActiveProductById(id);
     Product productUpdate = productOptional.get();
 
-    if (productUpdate.getName() != null) {
-      productUpdate.setName(product.getName());
-    }
-
     if (productUpdate.getImage() != null) {
       productUpdate.setImage(product.getImage());
+    }
+
+    if (productUpdate.getName() != null) {
+      productUpdate.setName(product.getName());
     }
 
     if (productUpdate.getPrice() != null) {

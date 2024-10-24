@@ -31,7 +31,7 @@ public class RestaurantController {
   }
 
   @GetMapping(path = "/{id}")
-  public Optional<Restaurant> findByIi(@PathVariable Long id) {
+  public Optional<Restaurant> findById(@PathVariable Long id) {
     return restaurantService.findRestaurantById(id);
   }
 
