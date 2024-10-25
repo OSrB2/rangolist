@@ -1,5 +1,6 @@
 package com.pedrooliveira.rangolist.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -31,6 +32,7 @@ public class Product {
   private LocalDateTime updatedAt;
 
   @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+  @JsonBackReference
   private List<Promotion> promotions;
 
   private Boolean status = true;
