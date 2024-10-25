@@ -11,11 +11,10 @@ import org.springframework.stereotype.Component;
 @NoArgsConstructor
 @Getter
 @Setter
-public class ProductDTO {
-  private String imagem;
-  private String nome;
-  private Double preco;
-  private String categoria;
-  private RestaurantDTO restaurante;
+public class PromotionDTO {
+  private ProductDTO produto;
+  private String descricao;
+  private Double promocao_preco;
+  private String promocao_dias;
+  private String promocao_horas;
 }
-

@@ -26,7 +26,7 @@ public class ProductService {
   @Autowired
   ProductMapper productMapper;
 
-  public ProductDTO createProduct (Product product) {
+  public ProductDTO createProduct(Product product) {
     if (product.getRestaurant() != null) {
       Restaurant restaurant = restaurantRepository.findById(product.getRestaurant().getId())
           .orElseThrow(() -> new RuntimeException("Restaurant not found"));
