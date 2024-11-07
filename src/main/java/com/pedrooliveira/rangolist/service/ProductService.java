@@ -26,14 +26,14 @@ public class ProductService {
   @Autowired
   ProductMapper productMapper;
 
-  public ProductDTO createProduct(Product product) {
+  @Transactional
+  public Product createProduct(Product product) {
     if (product.getRestaurant() != null) {
       Restaurant restaurant = restaurantRepository.findById(product.getRestaurant().getId())
           .orElseThrow(() -> new RuntimeException("Restaurant not found"));
       product.setRestaurant(restaurant);
     }
-    productRepository.save(product);
-    return productMapper.toProductDTO(product);
+    return productRepository.save(product);
   }
 
   public List<ProductDTO> listAllProducts() {

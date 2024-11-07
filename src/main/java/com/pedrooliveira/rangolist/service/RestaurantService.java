@@ -7,10 +7,13 @@ import com.pedrooliveira.rangolist.repository.RestaurantRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -21,9 +24,15 @@ public class RestaurantService {
   @Autowired
   RestaurantMapper restaurantMapper;
 
-  public RestaurantDTO createRestaurant (Restaurant restaurant) {
-     restaurantRepository.save(restaurant);
-     return restaurantMapper.toRestaurantDto(restaurant);
+  private final String uploadDir = "/path/to/upload/retaurant";
+
+  @Transactional
+  public Restaurant createRestaurant(Restaurant restaurant) {
+   return restaurantRepository.save(restaurant);
+  }
+
+  private String getFileNameFromUrl(String imageUrl) {
+    return imageUrl.substring(imageUrl.lastIndexOf('/') + 1);
   }
 
   public List<RestaurantDTO> listAllRestaurant() {
@@ -45,9 +54,9 @@ public class RestaurantService {
   public List<RestaurantDTO> findRestaurantByName(String name) {
     List<Restaurant> restaurantList = restaurantRepository.findActiveRestaurantByName(name);
 
-   return restaurantList.stream()
-       .map(restaurantMapper::toRestaurantDto)
-       .collect(Collectors.toList());
+    return restaurantList.stream()
+        .map(restaurantMapper::toRestaurantDto)
+        .collect(Collectors.toList());
   }
 
   public Restaurant updateRestaurantById(Long id, Restaurant restaurant) {
