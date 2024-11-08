@@ -1,6 +1,10 @@
 package com.pedrooliveira.rangolist.service;
 
 import com.pedrooliveira.rangolist.dto.PromotionDTO;
+import com.pedrooliveira.rangolist.exception.HandleIDNotFound;
+import com.pedrooliveira.rangolist.exception.HandleNoHasProducts;
+import com.pedrooliveira.rangolist.exception.HandleNoHasPromotions;
+import com.pedrooliveira.rangolist.exception.Validations;
 import com.pedrooliveira.rangolist.mapper.PromotionMapper;
 import com.pedrooliveira.rangolist.model.Product;
 import com.pedrooliveira.rangolist.model.Promotion;
@@ -25,18 +29,49 @@ public class PromotionService {
   @Autowired
   PromotionMapper promotionMapper;
 
+  @Autowired
+  Validations validations;
+
   public PromotionDTO createPromotion(Promotion promotion) {
+    Promotion newPromotion = new Promotion();
+
     if (promotion.getProduct() != null) {
       Product product = productRepository.findById(promotion.getProduct().getId())
-          .orElseThrow(() -> new RuntimeException("Product not found"));
-      promotion.setProduct(product);
+          .orElseThrow(() -> new HandleNoHasProducts("Product not found!"));
+      newPromotion.setProduct(product);
     }
-    promotionRepository.save(promotion);
-    return promotionMapper.toPromotionDTO(promotion);
+
+    if (validations.isDescriptionValid(promotion.getDescription())) {
+      newPromotion.setDescription(promotion.getDescription());
+    }
+
+    if (validations.isPromoPriceValid(promotion.getPromoPrice())) {
+      newPromotion.setPromoPrice(promotion.getPromoPrice());
+    }
+
+    if (validations.isPromoDaysValid(promotion.getPromoDays())) {
+      newPromotion.setPromoDays(promotion.getPromoDays());
+    }
+
+    if (validations.isPromoHoursValid(promotion.getPromoHours())) {
+      newPromotion.setPromoHours(promotion.getPromoHours());
+    }
+
+    if (newPromotion.getProduct() == null) {
+      throw new HandleIDNotFound("Product ID is mandatory!");
+    }
+
+    promotionRepository.save(newPromotion);
+    return promotionMapper.toPromotionDTO(newPromotion);
   }
 
   public List<PromotionDTO> listAllPromotions() {
     List<Promotion> promotions = promotionRepository.findAllActivePromotions();
+
+    if (promotions.isEmpty()) {
+      throw new HandleNoHasPromotions("No promotions found!");
+    }
+
     List<PromotionDTO> productDTOS = new ArrayList<>();
 
     for (Promotion promotion : promotions) {
@@ -47,11 +82,21 @@ public class PromotionService {
 
   public Optional<Promotion> findPromotionById(Long id) {
     Optional<Promotion> promotionOptional = promotionRepository.findActivePromotionById(id);
+
+    if (promotionOptional.isEmpty()) {
+      throw new HandleIDNotFound("ID not found!");
+    }
+
     return promotionOptional;
   }
 
   public Promotion updatePromotionById(Long id, Promotion promotion) {
     Optional<Promotion> promotionOptional = promotionRepository.findActivePromotionById(id);
+
+    if (promotionOptional.isEmpty()) {
+      throw new HandleIDNotFound("ID not found!");
+    }
+
     Promotion promotionUpdate = promotionOptional.get();
 
     if (promotionUpdate.getDescription() != null) {
@@ -78,7 +123,7 @@ public class PromotionService {
     Optional<Promotion> promotionOptional = promotionRepository.findActivePromotionById(id);
 
     if (promotionOptional.isEmpty()) {
-      throw new RuntimeException("Id not found");
+      throw new HandleIDNotFound("ID not found!");
     }
 
     promotionRepository.deactivatePromotionById(id);

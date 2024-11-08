@@ -1,6 +1,10 @@
 package com.pedrooliveira.rangolist.service;
 
 import com.pedrooliveira.rangolist.dto.ProductDTO;
+import com.pedrooliveira.rangolist.exception.HandleIDNotFound;
+import com.pedrooliveira.rangolist.exception.HandleNameNotFound;
+import com.pedrooliveira.rangolist.exception.HandleNoHasProducts;
+import com.pedrooliveira.rangolist.exception.Validations;
 import com.pedrooliveira.rangolist.mapper.ProductMapper;
 import com.pedrooliveira.rangolist.model.Product;
 import com.pedrooliveira.rangolist.model.Restaurant;
@@ -26,18 +30,46 @@ public class ProductService {
   @Autowired
   ProductMapper productMapper;
 
+  @Autowired
+  Validations validations;
+
   @Transactional
   public Product createProduct(Product product) {
+    Product newProduct = new Product();
+
     if (product.getRestaurant() != null) {
       Restaurant restaurant = restaurantRepository.findById(product.getRestaurant().getId())
-          .orElseThrow(() -> new RuntimeException("Restaurant not found"));
-      product.setRestaurant(restaurant);
+          .orElseThrow(() -> new HandleIDNotFound("ID not found!"));
+      newProduct.setRestaurant(restaurant);
     }
-    return productRepository.save(product);
+
+    if (validations.isNameValid(product.getName()) &&
+    validations.isNameCount(product.getName())) {
+      newProduct.setName(product.getName());
+    }
+
+    if (validations.isPriceValid(product.getPrice())) {
+      newProduct.setPrice(product.getPrice());
+    }
+
+    if (validations.isCategoryValid(product.getCategory())) {
+      newProduct.setCategory(product.getCategory());
+    }
+
+    if (newProduct.getRestaurant() == null) {
+      throw new HandleIDNotFound("Restaurant ID is mandatory!");
+    }
+
+    return productRepository.save(newProduct);
   }
 
   public List<ProductDTO> listAllProducts() {
     List<Product> products = productRepository.findAllActiveProducts();
+
+    if (products.isEmpty()) {
+      throw new HandleNoHasProducts("No prodcuts found!");
+    }
+
     List<ProductDTO> productDTOS = new ArrayList<>();
 
     for (Product product : products) {
@@ -50,11 +82,19 @@ public class ProductService {
   public Optional<Product> findProductById(Long id) {
     Optional<Product> productOptional = productRepository.findActiveProductById(id);
 
+    if (productOptional.isEmpty()) {
+      throw new HandleIDNotFound("ID not found!");
+    }
+
     return productOptional;
   }
 
   public List<ProductDTO> findProductByName(String name) {
     List<Product> productList = productRepository.findActiveProductByName(name);
+
+    if (productList.isEmpty()) {
+      throw new HandleNameNotFound("No products found!");
+    }
 
     return productList.stream()
         .map(productMapper::toProductDTO)
@@ -63,6 +103,11 @@ public class ProductService {
 
   public Product updateProductById(Long id, Product product) {
     Optional<Product> productOptional = productRepository.findActiveProductById(id);
+
+    if (productOptional.isEmpty()) {
+      throw new HandleIDNotFound("ID not found!");
+    }
+
     Product productUpdate = productOptional.get();
 
     if (productUpdate.getImage() != null) {
@@ -80,7 +125,6 @@ public class ProductService {
     if (productUpdate.getCategory() != null) {
       productUpdate.setCategory(product.getCategory());
     }
-
     return productRepository.save(productUpdate);
   }
 
@@ -89,9 +133,8 @@ public class ProductService {
     Optional<Product> productOptional = productRepository.findActiveProductById(id);
 
     if (productOptional.isEmpty()) {
-      throw new RuntimeException("Id not found");
+      throw new HandleIDNotFound("ID not found!");
     }
-
     productRepository.deactivateProductById(id);
   }
 }

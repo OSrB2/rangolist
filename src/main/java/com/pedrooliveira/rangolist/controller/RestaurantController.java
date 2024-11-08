@@ -2,6 +2,7 @@ package com.pedrooliveira.rangolist.controller;
 
 
 import com.pedrooliveira.rangolist.dto.RestaurantDTO;
+import com.pedrooliveira.rangolist.exception.HandleNoHasFile;
 import com.pedrooliveira.rangolist.mapper.RestaurantMapper;
 import com.pedrooliveira.rangolist.model.Restaurant;
 import com.pedrooliveira.rangolist.service.RestaurantService;
@@ -41,7 +42,7 @@ public class RestaurantController {
       RestaurantDTO restaurantDTO = restaurantMapper.toRestaurantDto(savedRestaurant);
 
       return new ResponseEntity<>(restaurantDTO, HttpStatus.CREATED);
-    } catch (IOException e) {
+    } catch (IOException ex) {
       return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
