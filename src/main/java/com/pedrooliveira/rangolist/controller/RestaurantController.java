@@ -1,15 +1,24 @@
 package com.pedrooliveira.rangolist.controller;
 
+
 import com.pedrooliveira.rangolist.dto.RestaurantDTO;
+import com.pedrooliveira.rangolist.exception.HandleNoHasFile;
+import com.pedrooliveira.rangolist.mapper.RestaurantMapper;
 import com.pedrooliveira.rangolist.model.Restaurant;
 import com.pedrooliveira.rangolist.service.RestaurantService;
-import jakarta.validation.Valid;
+import com.pedrooliveira.rangolist.utils.UploadUtil;
+import jakarta.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
+
 
 @RestController
 @RequestMapping("/api/restaurant")
@@ -18,11 +27,24 @@ public class RestaurantController {
   RestaurantService restaurantService;
 
   @Autowired
-  RestaurantDTO restaurantDTO;
+  private RestaurantMapper restaurantMapper;
 
   @PostMapping
-  public RestaurantDTO register(@Valid @RequestBody Restaurant restaurant) {
-    return restaurantService.createRestaurant(restaurant);
+  @Transactional
+  public ResponseEntity<RestaurantDTO> register(@ModelAttribute Restaurant restaurant,
+                                                @RequestParam("file") MultipartFile image) {
+    try {
+      if (!image.isEmpty()) {
+        String imagePath = UploadUtil.saveFile(image);
+        restaurant.setImage(imagePath);
+      }
+      Restaurant savedRestaurant = restaurantService.createRestaurant(restaurant);
+      RestaurantDTO restaurantDTO = restaurantMapper.toRestaurantDto(savedRestaurant);
+
+      return new ResponseEntity<>(restaurantDTO, HttpStatus.CREATED);
+    } catch (IOException ex) {
+      return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 
   @GetMapping
