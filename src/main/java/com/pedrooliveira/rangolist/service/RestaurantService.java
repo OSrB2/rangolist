@@ -28,7 +28,6 @@ public class RestaurantService {
   @Autowired
   Validations validations;
 
-
   @Transactional
   public Restaurant createRestaurant(Restaurant restaurant) {
     Restaurant newRestaurant = new Restaurant();

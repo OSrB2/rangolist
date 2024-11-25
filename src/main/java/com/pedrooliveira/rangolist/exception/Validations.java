@@ -3,6 +3,8 @@ package com.pedrooliveira.rangolist.exception;
 import com.pedrooliveira.rangolist.model.Address;
 import org.springframework.stereotype.Component;
 
+import java.io.File;
+
 @Component
 public class Validations {
   public boolean isNameValid(String name) {

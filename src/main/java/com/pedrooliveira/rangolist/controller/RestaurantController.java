@@ -1,8 +1,6 @@
 package com.pedrooliveira.rangolist.controller;
 
-
 import com.pedrooliveira.rangolist.dto.RestaurantDTO;
-import com.pedrooliveira.rangolist.exception.HandleNoHasFile;
 import com.pedrooliveira.rangolist.mapper.RestaurantMapper;
 import com.pedrooliveira.rangolist.model.Restaurant;
 import com.pedrooliveira.rangolist.service.RestaurantService;
@@ -18,7 +16,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
-
 
 @RestController
 @RequestMapping("/api/restaurant")
@@ -38,6 +35,7 @@ public class RestaurantController {
         String imagePath = UploadUtil.saveFile(image);
         restaurant.setImage(imagePath);
       }
+
       Restaurant savedRestaurant = restaurantService.createRestaurant(restaurant);
       RestaurantDTO restaurantDTO = restaurantMapper.toRestaurantDto(savedRestaurant);
 
