@@ -92,19 +92,19 @@ public class RestaurantService {
 
     Restaurant restaurantUpdate = restaurantOptional.get();
 
-    if (restaurantUpdate.getName() != null) {
+    if (restaurant.getName() != null) {
       restaurantUpdate.setName(restaurant.getName());
     }
 
-    if (restaurantUpdate.getImage() != null) {
+    if (restaurant.getImage() != null) {
       restaurantUpdate.setImage(restaurant.getImage());
     }
 
-    if (restaurantUpdate.getAddress() != null) {
+    if (restaurant.getAddress() != null) {
       restaurantUpdate.setAddress(restaurant.getAddress());
     }
 
-    if (restaurantUpdate.getOpeningHours() != null) {
+    if (restaurant.getOpeningHours() != null) {
       restaurantUpdate.setOpeningHours(restaurant.getOpeningHours());
     }
     return restaurantRepository.save(restaurantUpdate);

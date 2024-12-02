@@ -110,19 +110,19 @@ public class ProductService {
 
     Product productUpdate = productOptional.get();
 
-    if (productUpdate.getImage() != null) {
+    if (product.getImage() != null) {
       productUpdate.setImage(product.getImage());
     }
 
-    if (productUpdate.getName() != null) {
+    if (product.getName() != null) {
       productUpdate.setName(product.getName());
     }
 
-    if (productUpdate.getPrice() != null) {
+    if (product.getPrice() != null) {
       productUpdate.setPrice(product.getPrice());
     }
 
-    if (productUpdate.getCategory() != null) {
+    if (product.getCategory() != null) {
       productUpdate.setCategory(product.getCategory());
     }
     return productRepository.save(productUpdate);
