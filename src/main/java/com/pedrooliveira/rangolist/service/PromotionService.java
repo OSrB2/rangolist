@@ -99,15 +99,15 @@ public class PromotionService {
 
     Promotion promotionUpdate = promotionOptional.get();
 
-    if (promotionUpdate.getDescription() != null) {
+    if (promotion.getDescription() != null) {
       promotionUpdate.setDescription(promotion.getDescription());
     }
 
-    if (promotionUpdate.getPromoPrice() != null) {
+    if (promotion.getPromoPrice() != null) {
       promotionUpdate.setPromoPrice(promotion.getPromoPrice());
     }
 
-    if (promotionUpdate.getPromoDays() != null) {
+    if (promotion.getPromoDays() != null) {
       promotionUpdate.setPromoDays(promotion.getPromoDays());
     }
 
