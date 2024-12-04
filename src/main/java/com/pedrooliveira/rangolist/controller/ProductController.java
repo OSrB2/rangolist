@@ -4,7 +4,6 @@ import com.pedrooliveira.rangolist.dto.ProductDTO;
 import com.pedrooliveira.rangolist.mapper.ProductMapper;
 import com.pedrooliveira.rangolist.model.Product;
 import com.pedrooliveira.rangolist.service.ProductService;
-import com.pedrooliveira.rangolist.utils.UploadUtil;
 import jakarta.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,20 +26,12 @@ public class ProductController {
 
   @PostMapping
   @Transactional
-  public ResponseEntity<ProductDTO> register(@ModelAttribute Product product,
+  public ResponseEntity<?> register(@ModelAttribute Product product,
                              @RequestParam("file") MultipartFile image) {
-    try {
-      if (!image.isEmpty()) {
-        String imagePath = UploadUtil.saveFile(image);
-        product.setImage(imagePath);
-      }
-      Product savedProduct = productService.createProduct(product);
+      Product savedProduct = productService.createProductWithImage(product, image);
       ProductDTO productDTO = productMapper.toProductDTO(savedProduct);
 
-      return new ResponseEntity<>(productDTO, HttpStatus.CREATED);
-    } catch (IOException e) {
-      return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-    }
+      return ResponseEntity.status(HttpStatus.CREATED).body(productDTO);
   }
 
   @GetMapping

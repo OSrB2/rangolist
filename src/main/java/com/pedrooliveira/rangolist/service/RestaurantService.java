@@ -1,17 +1,17 @@
 package com.pedrooliveira.rangolist.service;
 
 import com.pedrooliveira.rangolist.dto.RestaurantDTO;
-import com.pedrooliveira.rangolist.exception.HandleIDNotFound;
-import com.pedrooliveira.rangolist.exception.HandleNameNotFound;
-import com.pedrooliveira.rangolist.exception.HandleNoHasRestaurants;
-import com.pedrooliveira.rangolist.exception.Validations;
+import com.pedrooliveira.rangolist.exception.*;
 import com.pedrooliveira.rangolist.mapper.RestaurantMapper;
 import com.pedrooliveira.rangolist.model.Restaurant;
 import com.pedrooliveira.rangolist.repository.RestaurantRepository;
+import com.pedrooliveira.rangolist.utils.UploadUtil;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -28,8 +28,26 @@ public class RestaurantService {
   @Autowired
   Validations validations;
 
-  @Transactional
-  public Restaurant createRestaurant(Restaurant restaurant) {
+//  @Transactional
+//  public Restaurant createRestaurant(Restaurant restaurant) {
+//    Restaurant newRestaurant = new Restaurant();
+//
+//    if (validations.isNameValid(restaurant.getName()) &&
+//        validations.isNameCount(restaurant.getName())) {
+//      newRestaurant.setName(restaurant.getName());
+//    }
+//
+//    if (validations.isOpeningHoursValid(restaurant.getOpeningHours())) {
+//      newRestaurant.setOpeningHours(restaurant.getOpeningHours());
+//    }
+//
+//    if (validations.isAddressValid(restaurant.getAddress())) {
+//      newRestaurant.setAddress(restaurant.getAddress());
+//    }
+//    return restaurantRepository.save(restaurant);
+//  }
+
+  private Restaurant validateAndMapRestaurant(Restaurant restaurant) {
     Restaurant newRestaurant = new Restaurant();
 
     if (validations.isNameValid(restaurant.getName()) &&
@@ -45,6 +63,21 @@ public class RestaurantService {
       newRestaurant.setAddress(restaurant.getAddress());
     }
     return restaurantRepository.save(restaurant);
+  }
+
+  @Transactional
+  public Restaurant createRestaurantWithImage(Restaurant restaurant, MultipartFile image) {
+    Restaurant newRestaurant = validateAndMapRestaurant(restaurant);
+
+    if (!image.isEmpty()) {
+      try {
+        String imagePath = UploadUtil.saveFile(image);
+        newRestaurant.setImage(imagePath);
+      } catch (IOException e) {
+        throw new HandleNoHasFile("Failed to upload image");
+      }
+    }
+    return restaurantRepository.save(newRestaurant);
   }
 
   public List<RestaurantDTO> listAllRestaurant() {
