@@ -28,7 +28,7 @@ public class ProductController {
   @PostMapping
   @Transactional
   public ResponseEntity<?> register(@ModelAttribute Product product,
-                             @RequestParam("file") MultipartFile image) {
+                             @RequestParam(value = "file", required = false) MultipartFile image) {
       Product savedProduct = productService.createProductWithImage(product, image);
       ProductDTO productDTO = productMapper.toProductDTO(savedProduct);
 

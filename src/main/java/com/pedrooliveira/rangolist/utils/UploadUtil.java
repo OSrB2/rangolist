@@ -1,6 +1,5 @@
 package com.pedrooliveira.rangolist.utils;
 
-import com.pedrooliveira.rangolist.exception.HandleNoHasFile;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -13,11 +12,6 @@ public class UploadUtil {
   private static final String UPLOAD_DIR = FileUpConfig.getUploadDir();
 
   public static String saveFile(MultipartFile file) throws IOException {
-
-    // TODO -> Essa exception não está funcionando.
-    if (file == null || file.isEmpty()) {
-      throw new HandleNoHasFile("Image is mandatory!");
-    }
 
     String filename = UUID.randomUUID() + "-" + file.getOriginalFilename();
     Path uploadPath = Paths.get(UPLOAD_DIR);

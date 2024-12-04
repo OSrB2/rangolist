@@ -50,4 +50,12 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
 
     return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
   }
+
+  @org.springframework.web.bind.annotation.ExceptionHandler(HandleNoHasFile.class)
+  public ResponseEntity<Object> handleNoHasFile(HandleNoHasFile e) {
+    Map<String, Object> body = new LinkedHashMap<>();
+    body.put("message", e.getMessage());
+
+    return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
+  }
 }
