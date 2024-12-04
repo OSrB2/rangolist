@@ -19,7 +19,6 @@ target/
 *.iml
 *.ipr
 .env
-.fastRequest
 
 ### NetBeans ###
 /nbproject/private/
@@ -33,3 +32,5 @@ build/
 
 ### VS Code ###
 .vscode/
+.DS_Store
+.fastRequest/
