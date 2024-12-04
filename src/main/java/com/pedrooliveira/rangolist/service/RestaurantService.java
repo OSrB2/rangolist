@@ -69,6 +69,10 @@ public class RestaurantService {
   public Restaurant createRestaurantWithImage(Restaurant restaurant, MultipartFile image) {
     Restaurant newRestaurant = validateAndMapRestaurant(restaurant);
 
+    if (image == null || image.isEmpty()) {
+      throw new HandleNoHasFile("The file is required and was not provided.");
+    }
+
     if (!image.isEmpty()) {
       try {
         String imagePath = UploadUtil.saveFile(image);

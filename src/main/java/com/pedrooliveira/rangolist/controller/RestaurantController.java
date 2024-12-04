@@ -26,7 +26,9 @@ public class RestaurantController {
 
   @PostMapping
   @Transactional
-  public ResponseEntity<?> register(@ModelAttribute Restaurant restaurant, @RequestParam("file") MultipartFile image) {
+  public ResponseEntity<?> register(@ModelAttribute Restaurant restaurant,
+                                    @RequestParam(value = "file", required = false) MultipartFile image) {
+
       Restaurant savedRestaurant = restaurantService.createRestaurantWithImage(restaurant, image);
       RestaurantDTO restaurantDTO = restaurantMapper.toRestaurantDto(savedRestaurant);
 

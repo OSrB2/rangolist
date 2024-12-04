@@ -72,6 +72,10 @@ public class ProductService {
   public Product createProductWithImage(Product product, MultipartFile image) {
     Product newProduct = validateAndMapProduct(product);
 
+    if (image == null || image.isEmpty()) {
+      throw new HandleNoHasFile("The file is required and was not provided.");
+    }
+
     if (!image.isEmpty()) {
       try {
         String imagePath = UploadUtil.saveFile(image);
