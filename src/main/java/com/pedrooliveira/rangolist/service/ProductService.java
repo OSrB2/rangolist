@@ -1,19 +1,19 @@
 package com.pedrooliveira.rangolist.service;
 
 import com.pedrooliveira.rangolist.dto.ProductDTO;
-import com.pedrooliveira.rangolist.exception.HandleIDNotFound;
-import com.pedrooliveira.rangolist.exception.HandleNameNotFound;
-import com.pedrooliveira.rangolist.exception.HandleNoHasProducts;
-import com.pedrooliveira.rangolist.exception.Validations;
+import com.pedrooliveira.rangolist.exception.*;
 import com.pedrooliveira.rangolist.mapper.ProductMapper;
 import com.pedrooliveira.rangolist.model.Product;
 import com.pedrooliveira.rangolist.model.Restaurant;
 import com.pedrooliveira.rangolist.repository.RestaurantRepository;
 import com.pedrooliveira.rangolist.repository.ProductRepository;
+import com.pedrooliveira.rangolist.utils.UploadUtil;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -33,8 +33,8 @@ public class ProductService {
   @Autowired
   Validations validations;
 
-  @Transactional
-  public Product createProduct(Product product) {
+
+  public Product validateAndMapProduct(Product product) {
     Product newProduct = new Product();
 
     if (product.getRestaurant() != null) {
@@ -60,6 +60,21 @@ public class ProductService {
       throw new HandleIDNotFound("Restaurant ID is mandatory!");
     }
 
+    return productRepository.save(product);
+  }
+
+  @Transactional
+  public Product createProductWithImage(Product product, MultipartFile image) {
+    Product newProduct = validateAndMapProduct(product);
+
+    if (!image.isEmpty()) {
+      try {
+        String imagePath = UploadUtil.saveFile(image);
+        newProduct.setImage(imagePath);
+      } catch (IOException e) {
+        throw new HandleNoHasFile("Failed to uplad image");
+      }
+    }
     return productRepository.save(newProduct);
   }
 
@@ -110,19 +125,19 @@ public class ProductService {
 
     Product productUpdate = productOptional.get();
 
-    if (productUpdate.getImage() != null) {
+    if (product.getImage() != null) {
       productUpdate.setImage(product.getImage());
     }
 
-    if (productUpdate.getName() != null) {
+    if (product.getName() != null) {
       productUpdate.setName(product.getName());
     }
 
-    if (productUpdate.getPrice() != null) {
+    if (product.getPrice() != null) {
       productUpdate.setPrice(product.getPrice());
     }
 
-    if (productUpdate.getCategory() != null) {
+    if (product.getCategory() != null) {
       productUpdate.setCategory(product.getCategory());
     }
     return productRepository.save(productUpdate);
