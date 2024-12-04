@@ -1,5 +1,6 @@
 package com.pedrooliveira.rangolist.controller;
 
+import com.pedrooliveira.rangolist.dto.OnlyProductDTO;
 import com.pedrooliveira.rangolist.dto.ProductDTO;
 import com.pedrooliveira.rangolist.mapper.ProductMapper;
 import com.pedrooliveira.rangolist.model.Product;
@@ -37,6 +38,11 @@ public class ProductController {
   @GetMapping
   public ResponseEntity<List<ProductDTO>> listAllProducts() {
     return ResponseEntity.ok(productService.listAllProducts());
+  }
+
+  @GetMapping(path = "/all")
+  public ResponseEntity<List<OnlyProductDTO>> onlyProducts() {
+    return ResponseEntity.ok(productService.listProductusWithoutRestaurants());
   }
 
   @GetMapping(path = "/{id}")
