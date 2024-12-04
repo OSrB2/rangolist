@@ -1,7 +1,9 @@
 package com.pedrooliveira.rangolist.service;
 
+import com.pedrooliveira.rangolist.dto.OnlyProductDTO;
 import com.pedrooliveira.rangolist.dto.ProductDTO;
 import com.pedrooliveira.rangolist.exception.*;
+import com.pedrooliveira.rangolist.mapper.OnlyProductMapper;
 import com.pedrooliveira.rangolist.mapper.ProductMapper;
 import com.pedrooliveira.rangolist.model.Product;
 import com.pedrooliveira.rangolist.model.Restaurant;
@@ -29,6 +31,9 @@ public class ProductService {
 
   @Autowired
   ProductMapper productMapper;
+
+  @Autowired
+  OnlyProductMapper onlyProductMapper;
 
   @Autowired
   Validations validations;
@@ -91,6 +96,21 @@ public class ProductService {
       productDTOS.add(productMapper.toProductDTO(product));
     }
 
+    return productDTOS;
+  }
+
+  public List<OnlyProductDTO> listProductusWithoutRestaurants() {
+    List<Product> products = productRepository.findAllActiveProducts();
+
+    if (products.isEmpty()) {
+      throw new HandleNoHasProducts("Products not found!");
+    }
+
+    List<OnlyProductDTO> productDTOS = new ArrayList<>();
+
+    for (Product product : products) {
+      productDTOS.add(onlyProductMapper.toOnlyProductDTO(product));
+    }
     return productDTOS;
   }
 
