@@ -51,7 +51,7 @@ public class ProductServiceTest {
 
   @DisplayName("Should validade new product")
   @Test
-  public void testValidateNewProduct() throws Exception {
+  public void testValidateNewProduct() {
     Restaurant restaurant = new Restaurant();
     restaurant.setId(1L);
     restaurant.setName("Restaurant Name");
@@ -91,7 +91,7 @@ public class ProductServiceTest {
 
   @DisplayName("Should register a new product with a image")
   @Test
-  public void testRegisterProductWithImage() throws Exception {
+  public void testRegisterProductWithImage() {
     Restaurant restaurant = new Restaurant();
     restaurant.setId(1L);
     restaurant.setName("Restaurant Name");
@@ -147,7 +147,7 @@ public class ProductServiceTest {
 
   @DisplayName("Should return a list of products")
   @Test
-  public void testListAllProducts() throws Exception {
+  public void testListAllProducts() {
     Product product1 = new Product();
     Product product2 = new Product();
 
@@ -162,7 +162,7 @@ public class ProductServiceTest {
 
   @DisplayName("Should return a list of products withou restaurants")
   @Test
-  public void testListAllProductsWithoutRestaurants() throws Exception {
+  public void testListAllProductsWithoutRestaurants() {
     Product product1 = new Product();
     Product product2 = new Product();
 
@@ -177,7 +177,7 @@ public class ProductServiceTest {
 
   @DisplayName("Should return a exception if there is no products")
   @Test
-  public void testNoHasProducts() throws Exception {
+  public void testNoHasProducts() {
     when(productRepository.findAllActiveProducts()).thenReturn(new ArrayList<>());
 
     assertThrows(HandleNoHasProducts.class, () -> {
@@ -187,7 +187,7 @@ public class ProductServiceTest {
 
   @DisplayName("Should return a product by ID")
   @Test
-  public void testFindProductByID() throws Exception {
+  public void testFindProductByID() {
     Product product = new Product();
     product.setId(1L);
 
@@ -203,7 +203,7 @@ public class ProductServiceTest {
 
   @DisplayName("Should return exception when ID not found")
   @Test
-  public void testIdNotFound() throws Exception {
+  public void testIdNotFound() {
     Long id = 1L;
 
     assertThrows(HandleIDNotFound.class, () -> {
@@ -213,7 +213,7 @@ public class ProductServiceTest {
 
   @DisplayName("Should return product by Name")
   @Test
-  public void testFindProductByName() throws Exception {
+  public void testFindProductByName() {
     Product product = new Product();
     product.setName("Name");
 
@@ -237,7 +237,7 @@ public class ProductServiceTest {
 
   @DisplayName("Should return a exception when name not found")
   @Test
-  public void testNameNotFound() throws Exception {
+  public void testNameNotFound() {
     String name = "Name";
 
     assertThrows(HandleNameNotFound.class, () -> {
@@ -247,7 +247,7 @@ public class ProductServiceTest {
 
   @DisplayName("Should update a product by ID")
   @Test
-  public void testUpdateProductBYID() throws Exception {
+  public void testUpdateProductBYID() {
     Restaurant restaurant = new Restaurant();
     restaurant.setId(1L);
     restaurant.setName("Restaurant Name");
@@ -280,7 +280,7 @@ public class ProductServiceTest {
 
   @DisplayName("Should delete product by ID")
   @Test
-  public void testDeleteProductByID() throws Exception {
+  public void testDeleteProductByID() {
     Product productExist = new Product();
     productExist.setId(1L);
 

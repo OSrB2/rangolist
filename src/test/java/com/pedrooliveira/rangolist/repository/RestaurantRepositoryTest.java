@@ -23,11 +23,10 @@ public class RestaurantRepositoryTest {
   private RestaurantRepository restaurantRepository;
 
   private Restaurant mockRestaurant;
-  private Address mockAddress;
 
   @BeforeEach
   void config() {
-    mockAddress = new Address();
+    Address mockAddress = new Address();
     mockAddress.setStreet("Street Test");
     mockAddress.setCity("City Test");
     mockAddress.setState("State Test");
@@ -43,7 +42,7 @@ public class RestaurantRepositoryTest {
 
   @DisplayName("Should find all active restaurants")
   @Test
-  public void testFindAllActiveRestaurants() throws Exception {
+  public void testFindAllActiveRestaurants() {
     testEntityManager.persistAndFlush(mockRestaurant);
 
     List<Restaurant> restaurantList = restaurantRepository.findAllActiveRestaurants();
@@ -59,7 +58,7 @@ public class RestaurantRepositoryTest {
 
   @DisplayName("Should find restaurant by ID if status is true")
   @Test
-  public void testFindRestaurantByIDIfStatusIsTrue() throws Exception {
+  public void testFindRestaurantByIDIfStatusIsTrue() {
     testEntityManager.persistAndFlush(mockRestaurant);
 
     Optional<Restaurant> restaurantOptional = restaurantRepository.findActiveRestaurantById(mockRestaurant.getId());
@@ -75,7 +74,7 @@ public class RestaurantRepositoryTest {
 
   @DisplayName("Should find restaurant by Name if statis is true")
   @Test
-  public void testFindRestaurantByNameIfStatusIsTrue() throws Exception {
+  public void testFindRestaurantByNameIfStatusIsTrue() {
     testEntityManager.persistAndFlush(mockRestaurant);
 
     List<Restaurant> restaurantList = restaurantRepository.findActiveRestaurantByName(mockRestaurant.getName());
@@ -91,7 +90,7 @@ public class RestaurantRepositoryTest {
 
   @DisplayName("Should deactivate restaurant by ID")
   @Test
-  public void testDeactivateRestaurantByID() throws Exception {
+  public void testDeactivateRestaurantByID() {
     testEntityManager.persistAndFlush(mockRestaurant);
 
     restaurantRepository.deactivateRestaurantById(mockRestaurant.getId());

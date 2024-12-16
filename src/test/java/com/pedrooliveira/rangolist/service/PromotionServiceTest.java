@@ -60,7 +60,7 @@ public class PromotionServiceTest {
 
   @DisplayName("Should register a promotion")
   @Test
-  public void testRegisterPromotion() throws Exception {
+  public void testRegisterPromotion() {
     when(productRepository.findById(1L)).thenReturn(Optional.of(mockProduct));
     when(validations.isDescriptionValid("Test Promotion")).thenReturn(true);
     when(validations.isPromoPriceValid(9.99)).thenReturn(true);
@@ -92,7 +92,7 @@ public class PromotionServiceTest {
 
   @DisplayName("Should throw exception when product is not found")
   @Test
-  public void testRegisterPromotionWhenProductNotFound() throws Exception {
+  public void testRegisterPromotionWhenProductNotFound() {
     when(productRepository.findById(1L)).thenReturn(Optional.empty());
 
     HandleNoHasProducts exception = assertThrows(HandleNoHasProducts.class, () ->
@@ -117,7 +117,7 @@ public class PromotionServiceTest {
 
   @DisplayName("Should return a list of promotions")
   @Test
-  public void testListAllPromotions() throws Exception {
+  public void testListAllPromotions() {
     List<Promotion> promotionList = Arrays.asList(mockPromotion);
 
     when(promotionRepository.findAllActivePromotions()).thenReturn(promotionList);
@@ -129,7 +129,7 @@ public class PromotionServiceTest {
 
   @DisplayName("Should return an exception if there is no promotions")
   @Test
-  public void testNoHasPromotions() throws Exception {
+  public void testNoHasPromotions() {
     when(promotionRepository.findAllActivePromotions()).thenReturn(new ArrayList<>());
 
     assertThrows(HandleNoHasPromotions.class, () -> {
@@ -154,7 +154,7 @@ public class PromotionServiceTest {
 
   @DisplayName("Should return exception when ID no found")
   @Test
-  public void testIDNotFound() throws Exception {
+  public void testIDNotFound() {
     mockPromotion.setId(1L);
 
     when(promotionRepository.findActivePromotionById(mockPromotion.getId())).thenReturn(Optional.empty());
@@ -166,7 +166,7 @@ public class PromotionServiceTest {
 
   @DisplayName("Should update a promotions by ID")
   @Test
-  public void testUpdatePromotionByID() throws Exception {
+  public void testUpdatePromotionByID() {
     Promotion promotionUpdate = new Promotion();
     promotionUpdate.setDescription("Updated Promotion");
     promotionUpdate.setPromoPrice(5.50);
@@ -184,7 +184,7 @@ public class PromotionServiceTest {
 
   @DisplayName("Should delete promotion by ID")
   @Test
-  public void testDeletePromotionByID() throws Exception {
+  public void testDeletePromotionByID() {
     Optional<Promotion> promotionOptional = Optional.of(mockPromotion);
 
     when(promotionRepository.findActivePromotionById(mockPromotion.getId())).thenReturn(promotionOptional);

@@ -48,7 +48,7 @@ public class RestaurantServiceTest {
 
   @DisplayName("Should validate new restaurant")
   @Test
-  public void testValidateNewRestaurant() throws Exception {
+  public void testValidateNewRestaurant() {
     Address address = new Address();
     address.setStreet("stree test");
     address.setCity("city test");
@@ -88,7 +88,7 @@ public class RestaurantServiceTest {
 
   @DisplayName("Should register a new restaurant with a image")
   @Test
-  public void testRegisterRestaurantWithImage() throws Exception {
+  public void testRegisterRestaurantWithImage() {
     Address address = new Address();
     address.setStreet("stree test");
     address.setCity("city test");
@@ -146,7 +146,7 @@ public class RestaurantServiceTest {
 
   @DisplayName("Should throw exception when image is not provided")
   @Test
-  public void testCreateRestaurantWithImageThrowWhenImageIsNull() throws Exception {
+  public void testCreateRestaurantWithImageThrowWhenImageIsNull() {
     Restaurant newRestaurant = new Restaurant();
     newRestaurant.setName("Test Name");
 
@@ -159,7 +159,7 @@ public class RestaurantServiceTest {
 
   @DisplayName("Should throw exception when upload fails")
   @Test
-  public void testCreateRestaurantWithImageThrowsWhenUploadFails() throws Exception {
+  public void testCreateRestaurantWithImageThrowsWhenUploadFails() {
     Restaurant newRestaurant = new Restaurant();
     newRestaurant.setName("Test Name");
     newRestaurant.setOpeningHours("00:00 - 00:00");
@@ -179,7 +179,7 @@ public class RestaurantServiceTest {
 
   @DisplayName("Should return a list of restaurants")
   @Test
-  public void testListAllRestaurants() throws Exception {
+  public void testListAllRestaurants() {
     Restaurant restaurant1 = new Restaurant();
     Restaurant restaurant2 = new Restaurant();
 
@@ -194,7 +194,7 @@ public class RestaurantServiceTest {
 
   @DisplayName("Should return an exception if there is no restaurants")
   @Test
-  public void testNoHasRestaurants() throws Exception {
+  public void testNoHasRestaurants() {
     when(restaurantRepository.findAllActiveRestaurants()).thenReturn(new ArrayList<>());
 
     assertThrows(HandleNoHasRestaurants.class, () -> {
@@ -204,7 +204,7 @@ public class RestaurantServiceTest {
 
   @DisplayName("Should return a restaurant by ID")
   @Test
-  public void testFindRestaurantByID() throws Exception {
+  public void testFindRestaurantByID() {
     Restaurant restaurant = new Restaurant();
     restaurant.setId(1L);
 
@@ -220,7 +220,7 @@ public class RestaurantServiceTest {
 
   @DisplayName("Should return exception when id no found")
   @Test
-  public void testIdNotFound() throws Exception {
+  public void testIdNotFound() {
     Long id = 1L;
 
     assertThrows(HandleIDNotFound.class, () -> {
@@ -230,7 +230,7 @@ public class RestaurantServiceTest {
 
   @DisplayName("Should return a restaurant by name")
   @Test
-  public void testFindRestaurantByName() throws Exception {
+  public void testFindRestaurantByName() {
     Restaurant restaurant = new Restaurant();
     restaurant.setName("Name");
 
@@ -254,7 +254,7 @@ public class RestaurantServiceTest {
 
   @DisplayName("Should return a exception when name not found")
   @Test
-  public void testNameNotFound() throws Exception {
+  public void testNameNotFound() {
     String name = "Name";
 
     assertThrows(HandleNameNotFound.class, () -> {
@@ -264,7 +264,7 @@ public class RestaurantServiceTest {
 
   @DisplayName("Should update a restaurant by ID")
   @Test
-  public void testUpdateRestaurantById() throws Exception {
+  public void testUpdateRestaurantById() {
     Address address = new Address();
     address.setStreet("stree test");
     address.setCity("city test");
@@ -297,7 +297,7 @@ public class RestaurantServiceTest {
 
   @DisplayName("Should delete restaurant by ID")
   @Test
-  public void testDeleteRestaurantByID() throws Exception {
+  public void testDeleteRestaurantByID() {
     Restaurant restaurantExist = new Restaurant();
     restaurantExist.setId(1L);
 
