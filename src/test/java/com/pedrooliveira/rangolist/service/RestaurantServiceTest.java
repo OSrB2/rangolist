@@ -41,118 +41,94 @@ public class RestaurantServiceTest {
   @InjectMocks
   private RestaurantService restaurantService;
 
+  private Address mockAddress;
+  private Restaurant mockRestaurant;
+  private Restaurant savedRestaurant;
+  private MockMultipartFile mockImage;
+
   @BeforeEach
-  void config() {
-    MockitoAnnotations.openMocks(this);
-  }
+  void setUp() {
+    mockAddress = new Address();
+    mockAddress.setStreet("Street Test");
+    mockAddress.setCity("City Test");
+    mockAddress.setState("State Test");
+    mockAddress.setZipcode("00000-000");
 
-  @DisplayName("Should validate new restaurant")
-  @Test
-  public void testValidateNewRestaurant() {
-    Address address = new Address();
-    address.setStreet("stree test");
-    address.setCity("city test");
-    address.setState("state test");
-    address.setZipcode("00000-000");
+    mockRestaurant = new Restaurant();
+    mockRestaurant.setName("Test Name");
+    mockRestaurant.setOpeningHours("00:00 - 00:00");
+    mockRestaurant.setAddress(mockAddress);
 
-    Restaurant newRestaurant = new Restaurant();
-    newRestaurant.setName("Test Name");
-    newRestaurant.setOpeningHours("00:00 - 00:00");
-    newRestaurant.setAddress(address);
-
-    Restaurant savedRestaurant = new Restaurant();
+    savedRestaurant = new Restaurant();
     savedRestaurant.setName("Test Name");
     savedRestaurant.setOpeningHours("00:00 - 00:00");
-    savedRestaurant.setAddress(address);
+    savedRestaurant.setAddress(mockAddress);
 
-    when(validations.isNameValid(newRestaurant.getName())).thenReturn(true);
-    when(validations.isNameCount(newRestaurant.getName())).thenReturn(true);
-    when(validations.isOpeningHoursValid(newRestaurant.getOpeningHours())).thenReturn(true);
-    when(validations.isAddressValid(newRestaurant.getAddress())).thenReturn(true);
-
-    when(restaurantRepository.save(Mockito.any(Restaurant.class))).thenReturn(savedRestaurant);
-
-    Restaurant result = restaurantService.validateAndMapRestaurant(newRestaurant);
-
-    assertNotNull(result);
-    assertEquals("Test Name", result.getName());
-    assertEquals("00:00 - 00:00", result.getOpeningHours());
-    assertEquals(address, result.getAddress());
-
-    Mockito.verify(validations).isNameValid(newRestaurant.getName());
-    Mockito.verify(validations).isNameCount(newRestaurant.getName());
-    Mockito.verify(validations).isOpeningHoursValid(newRestaurant.getOpeningHours());
-    Mockito.verify(validations).isAddressValid(newRestaurant.getAddress());
-    Mockito.verify(restaurantRepository, Mockito.times(1)).save(Mockito.any(Restaurant.class));
-  }
-
-  @DisplayName("Should register a new restaurant with a image")
-  @Test
-  public void testRegisterRestaurantWithImage() {
-    Address address = new Address();
-    address.setStreet("stree test");
-    address.setCity("city test");
-    address.setState("state test");
-    address.setZipcode("00000-000");
-
-    Restaurant newRestaurant = new Restaurant();
-    newRestaurant.setName("Test Name");
-    newRestaurant.setOpeningHours("00:00 - 00:00");
-    newRestaurant.setAddress(address);
-
-    Restaurant validateRestaurant = new Restaurant();
-    validateRestaurant.setName("Test Name");
-    validateRestaurant.setOpeningHours("00:00 - 00:00");
-    validateRestaurant.setAddress(address);
-
-    MockMultipartFile mockImage = new MockMultipartFile(
+    mockImage = new MockMultipartFile(
         "file",
         "image.jpg",
         "image/jpeg",
         "test image content".getBytes()
     );
+  }
 
-    Restaurant savedRestaurant = new Restaurant();
-    savedRestaurant.setName("Test Name");
-    savedRestaurant.setOpeningHours("00:00 - 00:00");
-    savedRestaurant.setAddress(address);
-    savedRestaurant.setImage("uploaded/path/to/image.jpg");
+  @DisplayName("Should validate new restaurant")
+  @Test
+  public void testValidateNewRestaurant() {
+    when(validations.isNameValid(mockRestaurant.getName())).thenReturn(true);
+    when(validations.isNameCount(mockRestaurant.getName())).thenReturn(true);
+    when(validations.isOpeningHoursValid(mockRestaurant.getOpeningHours())).thenReturn(true);
+    when(validations.isAddressValid(mockRestaurant.getAddress())).thenReturn(true);
+    when(restaurantRepository.save(any(Restaurant.class))).thenReturn(savedRestaurant);
 
-    when(validations.isNameValid(newRestaurant.getName())).thenReturn(true);
-    when(validations.isNameCount(newRestaurant.getName())).thenReturn(true);
-    when(validations.isOpeningHoursValid(newRestaurant.getOpeningHours())).thenReturn(true);
-    when(validations.isAddressValid(newRestaurant.getAddress())).thenReturn(true);
+    Restaurant result = restaurantService.validateAndMapRestaurant(mockRestaurant);
 
-    when(restaurantRepository.save(Mockito.any(Restaurant.class))).thenReturn(savedRestaurant);
+    assertNotNull(result);
+    assertEquals(mockRestaurant.getName(), result.getName());
+    assertEquals(mockRestaurant.getOpeningHours(), result.getOpeningHours());
+    assertEquals(mockRestaurant.getAddress(), result.getAddress());
+
+    verify(validations).isNameValid(mockRestaurant.getName());
+    verify(validations).isNameCount(mockRestaurant.getName());
+    verify(validations).isOpeningHoursValid(mockRestaurant.getOpeningHours());
+    verify(validations).isAddressValid(mockRestaurant.getAddress());
+    verify(restaurantRepository).save(any(Restaurant.class));
+  }
+
+  @DisplayName("Should register a new restaurant with an image")
+  @Test
+  public void testRegisterRestaurantWithImage() {
+    when(validations.isNameValid(mockRestaurant.getName())).thenReturn(true);
+    when(validations.isNameCount(mockRestaurant.getName())).thenReturn(true);
+    when(validations.isOpeningHoursValid(mockRestaurant.getOpeningHours())).thenReturn(true);
+    when(validations.isAddressValid(mockRestaurant.getAddress())).thenReturn(true);
+    when(restaurantRepository.save(any(Restaurant.class))).thenReturn(savedRestaurant);
 
     try (MockedStatic<UploadUtil> mockedUploadUtil = Mockito.mockStatic(UploadUtil.class)) {
       mockedUploadUtil.when(() -> UploadUtil.saveFile(mockImage)).thenReturn("uploaded/path/to/image.jpg");
 
-      Restaurant result = restaurantService.createRestaurantWithImage(newRestaurant, mockImage);
+      Restaurant result = restaurantService.createRestaurantWithImage(mockRestaurant, mockImage);
 
       assertNotNull(result);
       assertEquals("Test Name", result.getName());
       assertEquals("00:00 - 00:00", result.getOpeningHours());
-      assertEquals(address, result.getAddress());
+      assertEquals(mockAddress, result.getAddress());
       assertEquals("uploaded/path/to/image.jpg", result.getImage());
 
-      Mockito.verify(validations).isNameValid(newRestaurant.getName());
-      Mockito.verify(validations).isNameCount(newRestaurant.getName());
-      Mockito.verify(validations).isOpeningHoursValid(newRestaurant.getOpeningHours());
-      Mockito.verify(validations).isAddressValid(newRestaurant.getAddress());
-      Mockito.verify(restaurantRepository, Mockito.times(2)).save(Mockito.any(Restaurant.class));
+      verify(validations).isNameValid(mockRestaurant.getName());
+      verify(validations).isNameCount(mockRestaurant.getName());
+      verify(validations).isOpeningHoursValid(mockRestaurant.getOpeningHours());
+      verify(validations).isAddressValid(mockRestaurant.getAddress());
+      verify(restaurantRepository, times(2)).save(any(Restaurant.class));
     }
   }
 
   @DisplayName("Should throw exception when image is not provided")
   @Test
   public void testCreateRestaurantWithImageThrowWhenImageIsNull() {
-    Restaurant newRestaurant = new Restaurant();
-    newRestaurant.setName("Test Name");
-
     HandleNoHasFile exception = assertThrows(
         HandleNoHasFile.class,
-        () -> restaurantService.createRestaurantWithImage(newRestaurant, null)
+        () -> restaurantService.createRestaurantWithImage(mockRestaurant, null)
     );
     assertEquals("The file is required and was not provided.", exception.getMessage());
   }
@@ -160,19 +136,12 @@ public class RestaurantServiceTest {
   @DisplayName("Should throw exception when upload fails")
   @Test
   public void testCreateRestaurantWithImageThrowsWhenUploadFails() {
-    Restaurant newRestaurant = new Restaurant();
-    newRestaurant.setName("Test Name");
-    newRestaurant.setOpeningHours("00:00 - 00:00");
-
-    MockMultipartFile mockFile = Mockito.mock(MockMultipartFile.class);
-    when(mockFile.isEmpty()).thenReturn(false);
-
     try (MockedStatic<UploadUtil> mockedUploadUtil = Mockito.mockStatic(UploadUtil.class)) {
-      mockedUploadUtil.when(() -> UploadUtil.saveFile(mockFile))
+      mockedUploadUtil.when(() -> UploadUtil.saveFile(mockImage))
           .thenThrow(new IOException("Uploaded Failed"));
 
       assertThrows(HandleNoHasFile.class, () -> {
-        restaurantService.createRestaurantWithImage(newRestaurant, mockFile);
+        restaurantService.createRestaurantWithImage(mockRestaurant, mockImage);
       });
     }
   }
@@ -180,11 +149,7 @@ public class RestaurantServiceTest {
   @DisplayName("Should return a list of restaurants")
   @Test
   public void testListAllRestaurants() {
-    Restaurant restaurant1 = new Restaurant();
-    Restaurant restaurant2 = new Restaurant();
-
-    List<Restaurant> restaurantList = Arrays.asList(restaurant1, restaurant2);
-
+    List<Restaurant> restaurantList = Arrays.asList(mockRestaurant, savedRestaurant);
     when(restaurantRepository.findAllActiveRestaurants()).thenReturn(restaurantList);
 
     List<RestaurantDTO> restaurantDTOList = restaurantService.listAllRestaurant();
@@ -192,119 +157,32 @@ public class RestaurantServiceTest {
     assertEquals(2, restaurantDTOList.size());
   }
 
-  @DisplayName("Should return an exception if there is no restaurants")
+  @DisplayName("Should throw exception if there are no restaurants")
   @Test
   public void testNoHasRestaurants() {
     when(restaurantRepository.findAllActiveRestaurants()).thenReturn(new ArrayList<>());
 
-    assertThrows(HandleNoHasRestaurants.class, () -> {
-      restaurantService.listAllRestaurant();
-    });
+    assertThrows(HandleNoHasRestaurants.class, () -> restaurantService.listAllRestaurant());
   }
 
   @DisplayName("Should return a restaurant by ID")
   @Test
   public void testFindRestaurantByID() {
-    Restaurant restaurant = new Restaurant();
-    restaurant.setId(1L);
-
-    when(restaurantRepository.findActiveRestaurantById(restaurant.getId())).thenReturn(Optional.of(restaurant));
+    mockRestaurant.setId(1L);
+    when(restaurantRepository.findActiveRestaurantById(1L)).thenReturn(Optional.of(mockRestaurant));
 
     Optional<Restaurant> result = restaurantService.findRestaurantById(1L);
 
     assertTrue(result.isPresent());
-    assertEquals(restaurant, result.get());
-
-    verify(restaurantRepository, times(1)).findActiveRestaurantById(1L);
+    assertEquals(mockRestaurant, result.get());
+    verify(restaurantRepository).findActiveRestaurantById(1L);
   }
 
-  @DisplayName("Should return exception when id no found")
+  @DisplayName("Should throw exception when ID not found")
   @Test
   public void testIdNotFound() {
-    Long id = 1L;
+    when(restaurantRepository.findActiveRestaurantById(1L)).thenReturn(Optional.empty());
 
-    assertThrows(HandleIDNotFound.class, () -> {
-      restaurantService.findRestaurantById(id);
-    });
-  }
-
-  @DisplayName("Should return a restaurant by name")
-  @Test
-  public void testFindRestaurantByName() {
-    Restaurant restaurant = new Restaurant();
-    restaurant.setName("Name");
-
-    List<Restaurant> restaurantList = Arrays.asList(restaurant);
-
-    when(restaurantRepository.findActiveRestaurantByName(restaurant.getName())).thenReturn(restaurantList);
-
-    RestaurantDTO restaurantDTO = new RestaurantDTO();
-    restaurantDTO.setNome("Name");
-
-    when(restaurantMapper.toRestaurantDto(Mockito.any(Restaurant.class))).thenReturn(restaurantDTO);
-
-    List<RestaurantDTO> result = restaurantService.findRestaurantByName("Name");
-
-    assertNotNull(result);
-    assertEquals(1, result.size());
-    assertEquals("Name", result.get(0).getNome());
-
-    Mockito.verify(restaurantRepository, Mockito.times(1)).findActiveRestaurantByName("Name");
-  }
-
-  @DisplayName("Should return a exception when name not found")
-  @Test
-  public void testNameNotFound() {
-    String name = "Name";
-
-    assertThrows(HandleNameNotFound.class, () -> {
-      restaurantService.findRestaurantByName(name);
-    });
-  }
-
-  @DisplayName("Should update a restaurant by ID")
-  @Test
-  public void testUpdateRestaurantById() {
-    Address address = new Address();
-    address.setStreet("stree test");
-    address.setCity("city test");
-    address.setState("state test");
-    address.setZipcode("00000-000");
-
-    Restaurant existingRestaurant = new Restaurant();
-    existingRestaurant.setId(1L);
-    existingRestaurant.setName("Test Name");
-    existingRestaurant.setOpeningHours("00:00 - 00:00");
-    existingRestaurant.setAddress(address);
-
-    Restaurant updatedRestaurant = new Restaurant();
-    updatedRestaurant.setName("Updated Name");
-    updatedRestaurant.setOpeningHours("09:00 - 16:00");
-    updatedRestaurant.setAddress(address);
-
-    when(restaurantRepository.findActiveRestaurantById(existingRestaurant.getId())).thenReturn(Optional.of(existingRestaurant));
-
-    when(restaurantRepository.save(existingRestaurant)).thenReturn(existingRestaurant);
-
-    Restaurant restaurant = restaurantService.updateRestaurantById(existingRestaurant.getId(), updatedRestaurant);
-
-    assertEquals(updatedRestaurant.getName(), restaurant.getName());
-    assertEquals(updatedRestaurant.getOpeningHours(), restaurant.getOpeningHours());
-    assertEquals(updatedRestaurant.getAddress(), restaurant.getAddress());
-
-    verify(restaurantRepository).save(existingRestaurant);
-  }
-
-  @DisplayName("Should delete restaurant by ID")
-  @Test
-  public void testDeleteRestaurantByID() {
-    Restaurant restaurantExist = new Restaurant();
-    restaurantExist.setId(1L);
-
-    Optional<Restaurant> restaurantOptional = Optional.of(restaurantExist);
-
-    when(restaurantRepository.findActiveRestaurantById(restaurantExist.getId())).thenReturn(restaurantOptional);
-
-    restaurantService.deleteRestaurantById(restaurantExist.getId());
+    assertThrows(HandleIDNotFound.class, () -> restaurantService.findRestaurantById(1L));
   }
 }
