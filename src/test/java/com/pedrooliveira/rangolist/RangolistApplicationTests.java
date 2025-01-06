@@ -7,7 +7,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 class RangolistApplicationTests {
 
 	@Test
-	void contextLoads() {
+	void main() {
+		RangolistApplication.main(new String[] {});
 	}
 
 }

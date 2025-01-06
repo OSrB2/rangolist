@@ -28,26 +28,8 @@ public class RestaurantService {
   @Autowired
   Validations validations;
 
-//  @Transactional
-//  public Restaurant createRestaurant(Restaurant restaurant) {
-//    Restaurant newRestaurant = new Restaurant();
-//
-//    if (validations.isNameValid(restaurant.getName()) &&
-//        validations.isNameCount(restaurant.getName())) {
-//      newRestaurant.setName(restaurant.getName());
-//    }
-//
-//    if (validations.isOpeningHoursValid(restaurant.getOpeningHours())) {
-//      newRestaurant.setOpeningHours(restaurant.getOpeningHours());
-//    }
-//
-//    if (validations.isAddressValid(restaurant.getAddress())) {
-//      newRestaurant.setAddress(restaurant.getAddress());
-//    }
-//    return restaurantRepository.save(restaurant);
-//  }
 
-  private Restaurant validateAndMapRestaurant(Restaurant restaurant) {
+  public Restaurant validateAndMapRestaurant(Restaurant restaurant) {
     Restaurant newRestaurant = new Restaurant();
 
     if (validations.isNameValid(restaurant.getName()) &&
