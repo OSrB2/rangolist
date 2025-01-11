@@ -35,6 +35,14 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
     return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
   }
 
+  @org.springframework.web.bind.annotation.ExceptionHandler(HandleNameNotFound.class)
+  public ResponseEntity<Object> handleNameNotFoud(HandleNameNotFound e) {
+    Map<String, Object> body = new LinkedHashMap<>();
+    body.put("message", e.getMessage());
+
+    return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
+  }
+
   @org.springframework.web.bind.annotation.ExceptionHandler(HandleNoHasPromotions.class)
   public ResponseEntity<Object> handleNoHasPromotions(HandleNoHasPromotions e) {
     Map<String, Object> body = new LinkedHashMap<>();
