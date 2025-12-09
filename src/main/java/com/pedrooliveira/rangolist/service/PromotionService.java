@@ -111,7 +111,7 @@ public class PromotionService {
       promotionUpdate.setPromoDays(promotion.getPromoDays());
     }
 
-    if (promotionUpdate.getPromoHours() != null) {
+    if (promotion.getPromoHours() != null) {
       promotionUpdate.setPromoHours(promotion.getPromoHours());
     }
 
