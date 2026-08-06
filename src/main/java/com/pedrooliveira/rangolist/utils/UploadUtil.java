@@ -16,15 +16,14 @@ public class UploadUtil {
     String filename = UUID.randomUUID() + "-" + file.getOriginalFilename();
     Path uploadPath = Paths.get(UPLOAD_DIR);
 
-    // Cria o diretório de upload, se não existir
     if (!Files.exists(uploadPath)) {
       Files.createDirectories(uploadPath);
     }
-    // Define o caminho completo do arquivo
+
     Path filePath = uploadPath.resolve(filename);
-    // Salva o arquivo no sistema de arquivos
+
     Files.copy(file.getInputStream(), filePath);
-    // Retorna o caminho completo do arquivo salvo
+
     return filePath.toString();
   }
 }

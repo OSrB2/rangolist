@@ -19,7 +19,7 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, Long> {
   @Query("SELECT u FROM Restaurant u WHERE u.status = true AND u.id = :id")
   Optional<Restaurant> findActiveRestaurantById(@Param("id") Long id);
 
-  @Query("SELECT u FROM Restaurant u WHERE u.status = true AND u.name LIKE CONCAT('%', :name, '%')")
+  @Query("SELECT u FROM Restaurant u WHERE u.status = true AND LOWER(TRIM(u.name)) LIKE LOWER(CONCAT('%', TRIM(:name), '%'))")
   List<Restaurant> findActiveRestaurantByName(@Param("name") String name);
 
   @Modifying
